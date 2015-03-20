@@ -19,3 +19,4 @@ proguard/
 .idea/tasks.xml
 .idea/libraries/
 app/build/
+AndroidManifest.xml
