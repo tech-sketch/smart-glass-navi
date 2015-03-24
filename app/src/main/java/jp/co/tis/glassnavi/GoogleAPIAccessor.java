@@ -28,13 +28,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-public class AccessGoogleAPI implements Serializable {
+public class GoogleAPIAccessor implements Serializable {
 
 
-    private String distance;
-    private String duration;
-    //スタート地点の緯度経度
-    private double startPointLat, startPointLng;
     //ゴール地点の緯度経度
     private double goalLat, goalLng;
     private ArrayList<Double> viaPointLat = new ArrayList<Double>();
@@ -44,7 +40,7 @@ public class AccessGoogleAPI implements Serializable {
     private Bitmap streetViewBitmap;
     private ImageView imageview;
 
-    private AsyncTask<Uri, Void, String> mTask;
+    //private AsyncTask<Uri, Void, String> mTask;
     private AsyncTask<Uri, Void, Bitmap> streetViewTask;
 
     /*
@@ -72,64 +68,21 @@ public class AccessGoogleAPI implements Serializable {
     * ゲッター
     * */
 
-    AccessGoogleAPI(){
+    GoogleAPIAccessor(){
     }
 
 
-    AccessGoogleAPI(int width, int height){
+    GoogleAPIAccessor(int width, int height){
 
         this.width = width;
         this.height = height;
 
     }
 
-    public  String getDistance(){
-        return distance;
-    }
-
-    public  String getDuration(){
-        return duration;
-    }
-
     public int getSteps(){
         return numOfSteps;
     }
 
-    public double getStartLatitude(){
-        return startPointLat;
-    }
-
-    public double getStartLongitude(){
-        return startPointLng;
-    }
-
-    public double getEndLatitude(){
-        return goalLat;
-    }
-
-    public double getEndLongitude(){
-        return goalLng;
-    }
-
-    public double getCheckPointLatitude(int i){
-        return viaPointLat.get(i);
-    }
-
-    public double getCheckPointLongitude(int i){
-        return viaPointLng.get(i);
-    }
-
-    public String getMessage(int i){
-        return message.get(i);
-    }
-
-    public void setNull(){
-        streetViewBitmap = null;
-    }
-
-    public boolean getCheck(){
-        return check;
-    }
 
     public void setImageview(ImageView iv){ this.imageview = iv;}
 
@@ -281,20 +234,10 @@ public class AccessGoogleAPI implements Serializable {
             }
             jsonRoutes = jsRoot.getJSONArray("routes");
 
-
-
             jsonLegs = ((JSONObject) jsonRoutes.get(0)).getJSONArray("legs");
-
-
-            //スタート地点・住所
-            this.startPointLat = ((JSONObject) ((JSONObject) jsonLegs.get(0)).get("start_location")).getDouble("lat");
-            this.startPointLng = ((JSONObject) ((JSONObject) jsonLegs.get(0)).get("start_location")).getDouble("lng");
 
             this.goalLat = ((JSONObject) ((JSONObject) jsonLegs.get(0)).get("end_location")).getDouble("lat");
             this.goalLng = ((JSONObject) ((JSONObject) jsonLegs.get(0)).get("end_location")).getDouble("lng");
-
-            distance = ((JSONObject) ((JSONObject) jsonLegs.get(0)).get("distance")).getString("text");
-            this.duration = ((JSONObject) ((JSONObject) jsonLegs.get(0)).get("duration")).getString("text");
 
             jsonSteps = ((JSONObject) jsonLegs.get(0)).getJSONArray("steps");
 
@@ -337,7 +280,7 @@ public class AccessGoogleAPI implements Serializable {
             lngPoint = String.valueOf(goalLng);
         }
         //APIに投げる角度の取得とString変換
-        String angle = String.valueOf(GetAngle(steps));
+        String angle = String.valueOf(getAngle(steps));
 
         // URLを、扱いやすいUri型で組む
         Uri baseUri = Uri.parse("http://maps.googleapis.com/maps/api/streetview");
@@ -413,7 +356,7 @@ public class AccessGoogleAPI implements Serializable {
     }
 
 
-    private double GetAngle(int i){
+    private double getAngle(int i){
 
         //latitudeの増加量(Amount of increase)
 

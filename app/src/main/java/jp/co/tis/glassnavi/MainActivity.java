@@ -25,7 +25,7 @@ public class MainActivity extends Activity
         implements LocationListener{
 
     private LocationManager mLocationManager;
-    private AccessGoogleAPI mAccessGoogle;
+    private GoogleAPIAccessor mAccessor;
 
     //経由点とナビメッセージ
     private ArrayList<Double> mViaPointLat;
@@ -71,11 +71,11 @@ public class MainActivity extends Activity
         mViaPointLat = (ArrayList<Double>)intent.getSerializableExtra("latitudes");
         mViaPointLng = (ArrayList<Double>)intent.getSerializableExtra("longitudes");
         mTotalSteps = intent.getExtras().getInt("steps");
-        mAccessGoogle = (AccessGoogleAPI)intent.getSerializableExtra("aG");
+        mAccessor = (GoogleAPIAccessor)intent.getSerializableExtra("aG");
 
         //StreetViewの画像を張るImageViewをaccessGoogleオブジェクトに渡す
         mImageView = (ImageView)findViewById(R.id.NextImage);
-        mAccessGoogle.setImageview(mImageView);
+        mAccessor.setImageview(mImageView);
 
         //imageViewをタップしたら画像を消去(nullを代入)
         mImageView.setOnClickListener(new View.OnClickListener() {
@@ -103,8 +103,8 @@ public class MainActivity extends Activity
 
         //位置情報の取得
         //mLocationManager.requestLocationUpdates(provider, 100, 0, this);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, this);
-        //mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, this);
+        //mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, this);
 
     }
 
@@ -149,7 +149,7 @@ public class MainActivity extends Activity
         if (mViaPointNumber < mTotalSteps -1 &&
                 mDiffLat < DIFF_LAT && mDiffLng < DIFF_LNG) {
 
-            mNaviView = mAccessGoogle.getStreetViewBitmap(mViaPointNumber);
+            mNaviView = mAccessor.getStreetViewBitmap(mViaPointNumber);
             System.out.println("ok:" + mViaPointNumber);
             showDialog(mMessage.get(mViaPointNumber));
 
@@ -158,7 +158,7 @@ public class MainActivity extends Activity
         }else if(mViaPointNumber == mTotalSteps -1 &&
                 mDiffLat < DIFF_LAT && mDiffLng < DIFF_LNG) {
 
-            mNaviView = mAccessGoogle.getStreetViewBitmap(mViaPointNumber);
+            mNaviView = mAccessor.getStreetViewBitmap(mViaPointNumber);
             showDialog(mMessage.get(mViaPointNumber));
 
             mViaPointNumber += 1;

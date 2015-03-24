@@ -41,7 +41,7 @@ public class SetGoalActivity extends Activity implements OnClickListener, Locati
     private int mWidth;
     private int mHeight;
 
-    private AccessGoogleAPI mAccessGoogle;
+    private GoogleAPIAccessor mAccessor;
     private ProgressDialog mProgressDialog;
     private Intent mIntent;
 
@@ -83,8 +83,8 @@ public class SetGoalActivity extends Activity implements OnClickListener, Locati
         System.out.println("Provider: " + mProvider);
         //ロケーションサービスを開始
         //mLocationManager.requestLocationUpdates(mProvider, 100, 0, this);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, this);
-        //mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, this);
+        //mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, this);
 
     }
 
@@ -175,7 +175,7 @@ public class SetGoalActivity extends Activity implements OnClickListener, Locati
             System.out.println(mLatitude);
             System.out.println(mLongitude);
 
-            mAccessGoogle = new AccessGoogleAPI(mWidth, mHeight);
+            mAccessor = new GoogleAPIAccessor(mWidth, mHeight);
             mProgressDialog = new ProgressDialog(this);
             mIntent = new Intent(getApplicationContext(), MainActivity.class);
 
@@ -215,7 +215,7 @@ public class SetGoalActivity extends Activity implements OnClickListener, Locati
                     protected String doInBackground(Void... params) {
 
                         //現在地と目的地を渡し、DirectionsAPIからルート情報のjsonを取得
-                        String result = mAccessGoogle.getDirections(mLatitude, mLongitude, mDestination);
+                        String result = mAccessor.getDirections(mLatitude, mLongitude, mDestination);
                         if (isCancelled()) {
                             return result;
                         }
@@ -228,9 +228,9 @@ public class SetGoalActivity extends Activity implements OnClickListener, Locati
 
                         if (mError == null) {
                             //非同期で取得したjsonをパース
-                            mAccessGoogle.parseRoutes(result);
+                            mAccessor.parseRoutes(result);
 
-                            if(!mAccessGoogle.getJsonErrorExist()){
+                            if(!mAccessor.getJsonErrorExist()){
 
                                 Toast.makeText(getApplicationContext(),
                                         "入力した目的地がみつかりません", Toast.LENGTH_LONG).show();
@@ -239,23 +239,23 @@ public class SetGoalActivity extends Activity implements OnClickListener, Locati
 
                             }else {
                                 //パースしたルート上方からナビメッセージアレイを取得
-                                mMessages = mAccessGoogle.getMessages();
+                                mMessages = mAccessor.getMessages();
                                 //経由点の緯度アレイを取得
-                                mViaPointLat = mAccessGoogle.getLatitudes();
+                                mViaPointLat = mAccessor.getLatitudes();
                                 //経由点の経度アレイを取得
-                                mViaPointLng = mAccessGoogle.getLongitudes();
+                                mViaPointLng = mAccessor.getLongitudes();
                                 //総ステップ数を取得
-                                steps = mAccessGoogle.getSteps();
+                                steps = mAccessor.getSteps();
 
                                 //エラーが発生していれば取得
-                                mError = mAccessGoogle.getError();
+                                mError = mAccessor.getError();
                                 System.out.println("エラー:" + mError);
 
                                 //ProgressDialogを終了
                                 mProgressDialog.dismiss();
 
                                 //通信エラーが発生していた場合
-                                if (mAccessGoogle.getErrorExist()) {
+                                if (mAccessor.getErrorExist()) {
                                     Toast.makeText(mContext.getApplicationContext(), "通信エラー", Toast.LENGTH_LONG).show();
                                     mTask = null;
                                 } else {
@@ -266,7 +266,7 @@ public class SetGoalActivity extends Activity implements OnClickListener, Locati
                                     mIntent.putExtra("steps", steps);
 
                                     //accessGoogleオブジェクトを渡す
-                                    mIntent.putExtra("aG", mAccessGoogle);
+                                    mIntent.putExtra("aG", mAccessor);
 
                                     //Activityの開始
                                     startActivity(mIntent);
