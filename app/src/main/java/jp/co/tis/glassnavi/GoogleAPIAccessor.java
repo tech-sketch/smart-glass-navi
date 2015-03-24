@@ -48,9 +48,9 @@ public class GoogleAPIAccessor implements Serializable {
     * */
     private String latPoint, lngPoint;
     //Latitudeの増加量[Amount of Increase]
-    private double IncreaseOfLat;
+    private double increaseOfLat;
     //Longitudeの増加量
-    private double IncreaseOfLng;
+    private double increaseOfLng;
     //緯度経度の傾き
     private double slope;
     private double angle;
@@ -362,25 +362,25 @@ public class GoogleAPIAccessor implements Serializable {
 
         if(i < numOfSteps) {
 
-            IncreaseOfLat = viaPointLat.get(i + 1) - viaPointLat.get(i);
-            IncreaseOfLng = viaPointLng.get(i + 1) - viaPointLng.get(i);
+            increaseOfLat = viaPointLat.get(i + 1) - viaPointLat.get(i);
+            increaseOfLng = viaPointLng.get(i + 1) - viaPointLng.get(i);
 
         }else if(i == numOfSteps) {
 
-            IncreaseOfLat = goalLat - viaPointLat.get(i);
-            IncreaseOfLng = goalLng - viaPointLng.get(i);
+            increaseOfLat = goalLat - viaPointLat.get(i);
+            increaseOfLng = goalLng - viaPointLng.get(i);
 
         }
         //移動時の傾き
-        slope = IncreaseOfLat / IncreaseOfLng;
+        slope = increaseOfLat / increaseOfLng;
         System.out.println("slope:" + slope);
 
         //北を０度とした右回りのの傾き角度
         angle = Math.toDegrees(Math.atan(slope));
 
-        if(IncreaseOfLng >0.0){
+        if(increaseOfLng >0.0){
             angle = 90.0 - angle;
-        }else if(IncreaseOfLng <0.0){
+        }else if(increaseOfLng <0.0){
             angle = 270.0 - angle;
         }
         System.out.println("angle:" + angle);

@@ -23,7 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-public class SetGoalActivity extends Activity implements OnClickListener, LocationListener {
+public class SettingGoalActivity extends Activity implements OnClickListener, LocationListener {
 
 
     private LocationManager mLocationManager;
@@ -83,8 +83,8 @@ public class SetGoalActivity extends Activity implements OnClickListener, Locati
         System.out.println("Provider: " + mProvider);
         //ロケーションサービスを開始
         //mLocationManager.requestLocationUpdates(mProvider, 100, 0, this);
-        //mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, this);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, this);
+        //mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, this);
 
     }
 

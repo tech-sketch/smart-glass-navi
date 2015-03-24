@@ -103,8 +103,8 @@ public class MainActivity extends Activity
 
         //位置情報の取得
         //mLocationManager.requestLocationUpdates(provider, 100, 0, this);
-        //mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, this);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, this);
+        //mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, this);
 
     }
 
